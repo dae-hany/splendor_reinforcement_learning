@@ -1,0 +1,99 @@
+=========================================================
+Splendor Reinforcement Learning Environment: Solo Play Rules
+=========================================================
+
+1. GAME OBJECTIVE
+-------------------
+The agent's goal is to maximize its total prestige points (VP) before the game ends. The game's duration is limited by a "game clock" mechanic tied to the Level 3 deck.
+
+
+2. GAME SETUP
+-------------------
+2.1. Tokens:
+    * Place 4 of each gem token (Diamond-White, Sapphire-Blue, Emerald-Green, Ruby-Red, Onyx-Black).
+    * Place 5 Gold (Joker) tokens.
+
+2.2. Noble Tiles:
+    * Shuffle all 10 Noble tiles.
+    * Reveal 2 random Noble tiles. Return the other 8 to the box.
+
+2.3. Development Cards:
+    * Shuffle each level deck (Level 1, Level 2, Level 3) separately.
+    * Deal 3 face-up cards from each level. (Total 9 face-up cards).
+    * Place the three decks face-down near the revealed cards.
+
+2.4. Game Clock:
+    * The face-down Level 3 deck (containing 17 cards after setup) serves as the game's timer.
+
+
+3. GAMEPLAY LOOP (A "TURN")
+-------------------
+A single "turn" consists of two phases:
+
+3.1. Phase 1: Agent Action
+    * The agent MUST choose and perform exactly ONE action from the 'Agent Actions' list (see section 4).
+
+3.2. Phase 2: Game Clock Tick
+    * After the agent's action is complete (including any card refilling), remove the top card from the face-down Level 3 deck.
+    * This card is discarded from the game without being revealed.
+    * This "tick" signifies the passing of one turn.
+
+
+4. AGENT ACTIONS
+-------------------
+The agent must choose *one* of the following four actions per turn.
+
+4.1. Action A: Take 3 Unique Gem Tokens
+    * The agent takes 3 gem tokens of different colors from the bank.
+
+4.2. Action B: Take 2 Identical Gem Tokens
+    * The agent takes 2 gem tokens of the same color.
+    * This action is ONLY legal if there are at least 4 tokens of the chosen color in the bank before taking them.
+
+4.3. Action C: Reserve a Card
+    * The agent selects one card from:
+        a) The 9 face-up cards, OR
+        b) The top of one of the 3 face-down decks.
+    * The card is added to the agent's "reserved hand." An agent can hold a maximum of 3 reserved cards.
+    * The agent takes 1 Gold (Joker) token from the bank (if available).
+
+4.4. Action D: Purchase a Card
+    * The agent selects one card from:
+        a) The 9 face-up cards, OR
+        b) Its own "reserved hand."
+    * The agent pays the card's cost using its gem tokens, gold tokens, and/or permanent bonuses from previously purchased cards.
+    * Spent tokens are returned to the bank.
+    * The purchased card is added to the agent's play area, and its bonus/points are now active.
+
+
+5. CORE RULES & EVENTS
+-------------------
+5.1. Refilling Cards:
+    * If a face-up card (from the 9 available) is purchased or reserved, its empty slot is immediately refilled with the top card from its corresponding deck (Level 1, 2, or 3).
+    * This happens *before* the "Game Clock Tick" (Phase 2).
+
+5.2. Token Limit:
+    * At the end of an action, if the agent has more than 10 tokens (including gold), it must return tokens of its choice to the bank until it has exactly 10.
+
+5.3. Nobles (Automatic Visit):
+    * Nobles are *not* an action.
+    * At the end of an agent's turn (specifically, after a 'Purchase' action), the agent checks if its *permanent bonuses* (from purchased cards) meet the requirements of one of the 2 revealed Noble tiles.
+    * If the requirements are met, the agent automatically "receives" the Noble tile and its prestige points. This does not cost an action.
+
+
+6. GAME END CONDITIONS
+-------------------
+The game ends IMMEDIATELY when EITHER of the following conditions is met:
+
+6.1. Timer End:
+    * The "Game Clock Tick" (Phase 2) cannot be performed because the face-down Level 3 deck is empty. (This occurs after the 17th turn).
+
+6.2. Deck Depletion End:
+    * A Level 3 card is purchased or reserved from the face-up row, and the face-down Level 3 deck is empty (meaning the slot cannot be refilled).
+
+
+7. SCORING
+-------------------
+The agent's final score (the cumulative reward) is the sum of:
+    * All prestige points (VP) printed on its purchased Development Cards.
+    * All prestige points (VP) from its acquired Noble Tiles.

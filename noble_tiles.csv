@@ -6,6 +6,6 @@ points,cost_black,cost_white,cost_red,cost_blue,cost_green
 3,3,,3,3,
 3,,,4,,4
 3,,,,4,4
-3,4,4,,,,
+3,4,4,,,
 3,,,3,3,3
 3,3,3,,,3
